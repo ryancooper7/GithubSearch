@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import { FaRegStar } from 'react-icons/fa';
+import { IconContext } from 'react-icons';
 
 import '../css/Search.css';
 
@@ -18,8 +20,11 @@ const ResultItem = ({ result }) => {
     return (
         <div className="Result-container">
             <div className="Full-name-text">{result.full_name}</div>
-            <div>{result.description}</div>
+            <div className="Description-text">{result.description}</div>
             <div className="Result-details-container">
+                <IconContext.Provider value={{ color: 'darkslategrey'}}>
+                    <FaRegStar />
+                </IconContext.Provider>
                 <div className="Result-detail">{formatStars(result.stargazers_count)}</div>
                 <div className="Result-detail">{result.language}</div>
                 {result.license && (
@@ -36,9 +41,55 @@ const Search = () => {
     const [results, setResults] = useState([]);
     const [totalCount, setTotalCount] = useState(0);
     const [fetchingResults, setFetchingResults] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const [sortBy, setSortBy] = useState('stars');
+
+    useEffect(() => {
+        const reFetchData = async () => {
+            try {
+                let q = query;
+                if(selectedLanguage) {
+                     q += `language:${selectedLanguage}`
+                }
+                setFetchingResults(true);
+                const url = new URL('https://api.github.com/search/repositories');
+                url.searchParams.append('q', q);
+                url.searchParams.append('per_page', 10);
+                url.searchParams.append('order', 'desc');
+                url.searchParams.append('sort', sortBy);
+                const response = await fetch(url, {
+                    headers: {
+                        Accept: 'application/vnd.github.v3+json'
+                    },
+                });
+                const responseJSON = await response.json();
+                setResults(responseJSON.items);
+                setTotalCount(responseJSON.total_count);
+                setFetchingResults(false);
+            } catch (err) {
+                setFetchingResults(false);
+                throw err;
+            }
+        }
+        if(results.length > 0) {
+            reFetchData();
+        }
+    }, [sortBy, selectedLanguage])
+
+    const onLanguageSelect = (language) => {
+        if(selectedLanguage === language) {
+            setSelectedLanguage(null);
+        } else {
+            setSelectedLanguage(language);
+        }
+    };
 
     const handleQueryChange = (event) => {
         setQuery(event.target.value)
+    }
+
+    const handleSelectChange = (event) => {
+        setSortBy(event.target.value);
     }
 
     const handleSubmit = async (event) => {
@@ -48,8 +99,8 @@ const Search = () => {
             const url = new URL('https://api.github.com/search/repositories');
             url.searchParams.append('q', query);
             url.searchParams.append('per_page', 10);
-            url.searchParams.append('order', 'desc')
-            url.searchParams.append('sort', 'stars')
+            url.searchParams.append('order', 'desc');
+            url.searchParams.append('sort', sortBy);
             const response = await fetch(url, {
                 headers: {
                     Accept: 'application/vnd.github.v3+json'
@@ -69,20 +120,55 @@ const Search = () => {
     return (
         <div className="Container">
             <div className="Search-container">
-                <h1>Search Github</h1>
+                <h1>Search Github Repositories</h1>
                 <form onSubmit={handleSubmit}>
-                    <input className="Search-bar" type="text" name="query" onChange={handleQueryChange} />
-                    <input type="submit" value="Submit" />
+                    <input placeholder="Search Github Repositories" className="Search-bar" type="text" name="query" onChange={handleQueryChange} />
+                    <input type="submit" value="Search" />
                 </form>
             </div>
             {results.length > 0 && (
                 <div className="Results-container">
                     <div className="Results-filters">
-                        <div>Languages</div>
-                        <div>Javascript</div>
+                        <div className="Language-filters-title">Languages</div>
+                        <div className="Language-item" 
+                            style={{ backgroundColor: selectedLanguage === 'javascript' && 'blue', color: selectedLanguage === 'javascript' && 'white'}}
+                            onClick={() => onLanguageSelect('javascript')}>Javascript</div>
+                        <div className="Language-item"
+                        style={{ backgroundColor: selectedLanguage === 'python' && 'blue', color: selectedLanguage === 'python' && 'white' }}
+                        onClick={() => onLanguageSelect('python')}>Python</div>
+                        <div className="Language-item"
+                        style={{ backgroundColor: selectedLanguage === 'java' && 'blue', color: selectedLanguage === 'java' && 'white' }}
+                        onClick={() => onLanguageSelect('java')}>Java</div>
+                        <div className="Language-item" 
+                            style={{ backgroundColor: selectedLanguage === 'typescript' && 'blue', color: selectedLanguage === 'typescript' && 'white' }}
+                        onClick={() => onLanguageSelect('typescript')}>TypeScript</div>
+                        <div className="Language-item"
+                            style={{ backgroundColor: selectedLanguage === 'c#' && 'blue', color: selectedLanguage === 'c#' && 'white' }}
+                        onClick={() => onLanguageSelect('c#')}>C#</div>
+                        <div className="Language-item" 
+                            style={{ backgroundColor: selectedLanguage === 'php' && 'blue', color: selectedLanguage === 'php' && 'white' }}
+                        onClick={() => onLanguageSelect('php')}>PHP</div>
+                        <div className="Language-item" 
+                            style={{ backgroundColor: selectedLanguage === 'c++' && 'blue', color: selectedLanguage === 'c++' && 'white' }}
+                        onClick={() => onLanguageSelect('c++')}>C++</div>
+                        <div className="Language-item"
+                            style={{ backgroundColor: selectedLanguage === 'c' && 'blue', color: selectedLanguage === 'c' && 'white' }}
+                        onClick={() => onLanguageSelect('c')}>C</div>
+                        <div className="Language-item"
+                            style={{ backgroundColor: selectedLanguage === 'shell' && 'blue', color: selectedLanguage === 'shell' && 'white' }}
+                        onClick={() => onLanguageSelect('shell')}>Shell</div>
+                        <div className="Language-item"
+                            style={{ backgroundColor: selectedLanguage === 'ruby' && 'blue', color: selectedLanguage === 'ruby' && 'white' }}
+                        onClick={() => onLanguageSelect('ruby')}>Ruby</div>
                     </div>
                     <div className="Results-list">
-                    <div className="Total-count-text">{totalCount}<span className="Total-results-sub-text"> repository results</span></div>
+                        <div className="Results-headers">
+                            <div className="Total-count-text">{totalCount.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}<span className="Total-results-sub-text"> repository results</span></div>
+                            <select onChange={handleSelectChange} value={sortBy} className="Filter-select">
+                                <option value=''>Best Match</option>
+                                <option value='stars'>Stars</option>
+                            </select>
+                        </div>
                         {results.map(result => <ResultItem key={result.id} result={result} />)}
                     </div>
                 </div>
