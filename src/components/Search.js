@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { FaRegStar } from 'react-icons/fa';
 import { IconContext } from 'react-icons';
+import { useNavigate } from '@reach/router';
 
 import '../css/Search.css';
 
@@ -16,10 +17,15 @@ function formatStars(num) {
 }
 
 const ResultItem = ({ result }) => {
+    const navigate = useNavigate();
     console.log(result.stargazers_count);
+    const handleClick = () => {
+        navigate(`/details/${result.id}`, { state: {repository: result}});
+    }
+
     return (
         <div className="Result-container">
-            <div className="Full-name-text">{result.full_name}</div>
+            <div className="Full-name-text" onClick={handleClick}>{result.full_name}</div>
             <div className="Description-text">{result.description}</div>
             <div className="Result-details-container">
                 <IconContext.Provider value={{ color: 'darkslategrey'}}>
@@ -119,8 +125,10 @@ const Search = () => {
     console.log(results);
     return (
         <div className="Container">
+            <div className="Header">
+                <h1 style={{color: 'white', textAlign: 'center'}}>Search Github Repositories</h1>
+            </div>
             <div className="Search-container">
-                <h1>Search Github Repositories</h1>
                 <form onSubmit={handleSubmit}>
                     <input placeholder="Search Github Repositories" className="Search-bar" type="text" name="query" onChange={handleQueryChange} />
                     <input type="submit" value="Search" />

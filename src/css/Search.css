@@ -6,7 +6,7 @@
 }
 
 .Search-bar {
-    width: 40vw;
+    width: 70vw;
     margin-right: 10px;
     height: 25px;
     border: 1px solid grey;
@@ -14,11 +14,22 @@
     padding-left: 10px;
 }
 
+@media (min-width: 800px) {
+    .Search-bar {
+        width: 40vw;
+        margin-right: 10px;
+        height: 25px;
+        border: 1px solid grey;
+        border-radius: 5px;
+        padding-left: 10px;
+    }
+}
+
 .Search-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 50px
+    padding-bottom: 50px;
 }
 
 .Results-container {
@@ -38,6 +49,18 @@
     margin-right: 30px;
     padding: 15px;
     margin-left: 10px;
+    display: none;
+}
+
+@media (min-width: 800px) { 
+  .Results-filters {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid grey;
+    border-radius: 5px;
+    margin-right: 30px;
+    padding: 15px;
+  }
 }
 
 .Result-container {
@@ -52,7 +75,11 @@
     color: #0000EE;
     margin: 0px 0px 0px 0px;
     font-weight: 500;
+    cursor: pointer;
+}
 
+.License {
+    margin-top: 10px;
 }
 
 .Total-count-text {
@@ -77,8 +104,17 @@
 .Results-list {
     display: flex;
     flex-direction: column;
-    width: 600px;
+    width: 400px;
 }
+
+@media (min-width: 800px) {
+    .Results-list {
+        display: flex;
+        flex-direction: column;
+        width: 600px;
+    }
+}
+
 
 .Result-detail {
     margin-right: 10px;

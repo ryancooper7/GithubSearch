@@ -1,0 +1,77 @@
+.Container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+}
+
+.Title {
+    font-size: 40px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.Content-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 700px;
+    padding-bottom: 50px;
+}
+
+.Language-percentage-container {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+.Language-name {
+    margin-right: 20px;
+    margin-left: 20px;
+    flex: 1;
+}
+
+.Sub-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    border: 1px solid grey;
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 50px;
+    margin-right: 50px;
+    min-width: 300px;
+}
+
+.Container-title {
+    font-size: 25;
+    font-weight: bold;
+}
+
+.Container-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 50px;
+    flex: 1;
+}
+
+@media screen and (max-width: 800px) {
+    .Container-row {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-top: 0px;
+    }
+}
+
+.Header {
+    background-color: darkslategray;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
